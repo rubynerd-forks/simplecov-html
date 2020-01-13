@@ -14,6 +14,11 @@ end
 module SimpleCov
   module Formatter
     class HTMLFormatter
+
+      def initialize(remote_asset_url_base: ENV.fetch('SIMPLECOV_REMOTE_ASSET_URL_BASE', '.'))
+        @remote_asset_url_base = remote_asset_url_base
+      end
+
       def format(result)
         Dir[File.join(File.dirname(__FILE__), "../public/*")].each do |path|
           FileUtils.cp_r(path, asset_output_path)
@@ -48,7 +53,7 @@ module SimpleCov
       end
 
       def assets_path(name)
-        File.join("./assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
+        File.join(@remote_asset_url_base, "assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
       end
 
       # Returns the html for the given source_file
